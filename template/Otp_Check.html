@@ -1,4 +1,5 @@
-<form>
+<form method="POST">
+    {% csrf_token %}
     <h1> For OTP Check...</h1>
     <br>
     <label>
@@ -7,5 +8,5 @@
     <br>
     <input type="text" name="ot1">
     <br>
-    <input type="submit" value="Verify">
+    <input type="Submit" value="Verify">
 </form>

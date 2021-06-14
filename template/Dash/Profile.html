@@ -1,0 +1,52 @@
+{% extends 'dash/base.html' %}
+{% load static %}
+{% block NewContent %}
+    <div class="row">
+        <div class="col-md-6 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Update Profile</h4>
+                            <p class="card-description"> Basic form elements </p>
+                            <form class="forms-sample">
+                            <div class="form-group">
+                                <label for="exampleInputName1">Name</label>
+                                <input type="text" class="form-control" id="exampleInputName1" value="{{ USERS.c_name }}"placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail3">Email address</label>
+                                <input type="email" class="form-control" id="exampleInputEmail3" value="{{ USERS.c_email }}" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword4">Password</label>
+                                <input type="text" class="form-control" id="exampleInputPassword4" value="{{ USERS.c_pass }}" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <label>File upload</label>
+                                
+                                {% if USERS.profile %}
+                                <br>
+                                <img src="{{ USERS.profile.url }}" width="100px">
+                                {% endif %}
+                                
+                                <input type="file" name="img" class="form-control">  
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputCity1">Contact Nos</label>
+                                <input type="text" class="form-control" id="exampleInputCity1" value="{{ USERS.c_nos }}" placeholder="Location">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleTextarea1">Address</label>
+                                <textarea class="form-control" id="exampleTextarea1" rows="2">
+                                    {{ USERS.c_add }}
+                                </textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success mr-2">Submit</button>
+                            <button class="btn btn-light">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+        </div>
+    </div>
+            
+            
+{% endblock NewContent %}

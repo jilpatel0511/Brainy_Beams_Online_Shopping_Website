@@ -6,7 +6,7 @@ from django.http import HttpResponse
 import smtplib
 import random
 import email.message
-
+#-------------------company-----------------------
 def company_login(request):
     if request.POST:
         em = request.POST['email']
@@ -56,7 +56,8 @@ def CompForgetPass(req):
             recieve_email = em1
             server = smtplib.SMTP('smtp.gmail.com',587)
                 
-                #------------------OTP
+            #------------------OTP------------------------
+            
             nos = [1,2,3,4,5,6,8,9,0]
             otp = ""
             for i in range(6):
@@ -93,19 +94,38 @@ def CompForgetPass(req):
         
 def OTP_CHECK(request):
     if 'otp' in request.session.keys():
-        print("New OTP Check")
+        print("NEW otp check")
         if request.POST:
             ot1 = request.POST['ot1']
-            
+            print(ot1)
             otp = request.session['otp']
-            
+            print(otp)
             if ot1 == otp:
                 del request.session['otp']
                 print("You are ready for new password..")
+                return redirect('New_Pass')
             else:
                 del request.session['otp']
                 return redirect('CompForgetPass')
         return render(request,'Otp_Check.html')
+    else:
+        return redirect('company_login')
+
+def New_Pass(req):
+    if 'new_user' in req.session.keys():
+        if req.POST:
+            p1 = req.POST['pass1']
+            p2 = req.POST['pass2']
+            print(p1,p2)
+            if p1 == p2:
+                obj = Comp_data.objects.get(id = int(req.session['new_user']))
+                obj.c_pass = p2
+                obj.save()
+                del req.session['new_user']
+                return redirect('company_login')
+            else:
+                return HttpResponse('<a href=""> Both password are not same  </a>')
+        return render(req,'NewPass1.html')
     else:
         return redirect('company_login')
          
@@ -113,6 +133,21 @@ def CompDashBoard(req):
     if 'Comp_data' in req.session.keys():
         User = Comp_data.objects.get(id = int(req.session['Comp_data']))
         return render(req,'Dash/index.html',{'USERS':User})
+    else:
+        return redirect('company_login')
+
+def Profile_manage(req):
+    if 'Comp_data' in req.session.keys():
+        User = Comp_data.objects.get(id = int(req.session['Comp_data']))
+        return render(req,'Dash/Profile.html',{'USERS':User})
+    else:
+        return redirect('company_login')
+
+
+def Logout_Comp(req):
+    if 'Comp_data' in req.session.keys():
+        del req.session['Comp_data']
+        return redirect('company_login')
     else:
         return redirect('company_login')
 

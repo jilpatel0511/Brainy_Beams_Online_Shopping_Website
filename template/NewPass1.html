@@ -1,0 +1,13 @@
+<form method="POST">
+    {% csrf_token %}
+    <label> Enter New Pasword</label>
+    <br>
+    <input type="text" name="pass1">
+    <br>
+    <label> Re-Enter New Pasword</label>
+    <br>
+    <input type="text" name="pass2">
+    <br>
+    <br>
+    <input type="submit" name="Check">
+</form>
