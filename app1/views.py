@@ -139,6 +139,23 @@ def CompDashBoard(req):
 def Profile_manage(req):
     if 'Comp_data' in req.session.keys():
         User = Comp_data.objects.get(id = int(req.session['Comp_data']))
+        if req.POST:
+            nm = req.POST['nm1']
+            em = req.POST['em1']
+            pass1 = req.POST['pass1']
+            con = req.POST['con1']
+            add = req.POST['add1']
+            img1 = req.FILES.get('img1')
+
+            User.c_name = nm
+            User.c_email = em
+            User.c_pass = pass1
+            User.c_nos = con
+            User.c_add = add
+            if img1 != None:
+                User.profile = img1
+            User.save()
+
         return render(req,'Dash/Profile.html',{'USERS':User})
     else:
         return redirect('company_login')
