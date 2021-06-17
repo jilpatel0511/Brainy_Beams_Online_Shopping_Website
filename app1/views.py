@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
-from .models import Comp_data
+from .models import Comp_data, Comp_Customers
 from django.http import HttpResponse
 # Create your views here.
 
 import smtplib
 import random
 import email.message
-#-------------------company-----------------------
+#------------------------------------------company--------------------------------------------------
 def company_login(request):
     if request.POST:
         em = request.POST['email']
@@ -160,6 +160,89 @@ def Profile_manage(req):
     else:
         return redirect('company_login')
 
+def AddCompCustomer(req):   
+    if 'Comp_data' in req.session.keys():
+        User = Comp_data.objects.get(id = int(req.session['Comp_data']))
+        if req.POST:
+            nm = req.POST['nm1']
+            em = req.POST['em1']
+            con = req.POST['con1']
+
+            obj = Comp_Customers()
+            obj.comp = User
+            obj.cust_nm = nm
+            obj.cust_em = em
+            obj.cust_con = con
+
+
+            #------------------Password Created------------------------
+            salfa = 'aswyryfbxnsjdueoionmqaxbc'
+            ualfa = salfa.upper()
+            spec = '!@#$%&*'
+            num = '1234567890'
+            data = salfa + ualfa + spec + num
+            otp = ""
+            for i in range(6):
+                otp += str(random.choice(data))
+                print(otp)
+            print(otp)
+            obj.cust_pass = otp
+
+            try:
+                sender_email = "jilpatel0511@gmail.com"
+                sender_pass = "9104266773"
+                recieve_email = em
+                server = smtplib.SMTP('smtp.gmail.com',587)
+                    
+                #------------------OTP------------------------
+
+                mes1 = f"""
+                Hello,
+                You are now new Customer of this company,
+                Here is your login credentails
+
+                email id =  {em}
+                password =  {otp}
+                Link = http://127.0.0.1:8000/customer_login/
+                """
+
+                msg = email.message.Message()
+                msg['Subject'] = "New Customer Added"
+                msg['From'] = sender_email
+                msg['To'] = recieve_email
+                password = sender_pass
+                msg.add_header('Content-Type', 'text/html')
+                msg.set_payload(mes1)
+                    
+                server.starttls()
+                server.login(msg['From'],password)
+                server.sendmail(msg['From'], msg['To'], msg.as_string())
+                obj.save()
+                return redirect('ViewCustomer')
+            except:
+                return HttpResponse('< href=""> You Have entered wrong email.. </a>')
+        return render(req,'Dash/Add_customer.html',{'USERS':User})
+    else:
+        return redirect('company_login') 
+
+def ViewCustomer(req):
+    if 'Comp_data' in req.session.keys():
+        User = Comp_data.objects.get(id = int(req.session['Comp_data']))
+        custs = Comp_Customers.objects.filter(comp = User)
+        print(custs)
+        return render(req,'Dash/View_customer.html',{'USERS':User,'cust':custs})
+    else:
+        return redirect('company_login')
+
+def DeleteCustomer(req, id):
+    if 'Comp_data' in req.session.keys():
+        
+        custs = Comp_Customers.objects.get(id = id)
+        custs.delete()
+        print(custs)
+        return redirect('ViewCustomer')
+    else:
+        return redirect('company_login')
 
 def Logout_Comp(req):
     if 'Comp_data' in req.session.keys():
@@ -168,4 +251,13 @@ def Logout_Comp(req):
     else:
         return redirect('company_login')
 
+#------------------------------------------company--------------------------------------------------
 
+
+
+#------------------------------------------customer--------------------------------------------------
+def customer_login(req):
+    return render(req,'customer/login/login.html')
+
+
+#------------------------------------------customer--------------------------------------------------

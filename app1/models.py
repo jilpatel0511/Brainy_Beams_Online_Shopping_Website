@@ -16,6 +16,7 @@ class Comp_Customers(models.Model):
     cust_nm = models.CharField(default='',max_length=200)
     cust_em = models.EmailField(default='',max_length=200)
     cust_con = models.PositiveBigIntegerField(default=0)
+    cust_join_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     cust_add1 = models.TextField(default='')
     cust_add2 = models.TextField(default='')
     cust_profile = models.ImageField(upload_to='Comp_profile/', default="", max_length =300, blank=True, null=True)
